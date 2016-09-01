@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	VERSION         = ".00a"
 	TOPICS_PER_PAGE = 10
 )
 

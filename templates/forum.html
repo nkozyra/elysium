@@ -2,7 +2,8 @@
 
 {{ with .Payload}}
 	<div class="mdl-grid elysium-grid">
-	<div class="mdl-cell mdl-cell--12-col"><h1 class="elysium-page-title">{{.Name}}</h1></div>
+	<div class="mdl-cell mdl-cell--9-col"><h1 class="elysium-page-title">{{.Name}}</h1></div>
+	<div class="mdl-cell mdl-cell--3-col"><a href="#" onclick="newDiscussionDialog()">Post</a></div>
 	    {{ range .Topics }}
 	      <div class="mdl-cell mdl-cell--10-col"><a href="/topic/{{.Guid}}">{{.Title}}</a> //</div>
 	    {{ end}}
@@ -12,6 +13,17 @@
 	    {{ end }} 
 
 	</div>
-{{ end }}
 
+
+{{ end }}
+	<div id="elysium-new-discussion">
+		<div id="new-post" class="mdl-grid">
+			<div class="mdl-cell mdl-cell--12-col">
+				{{ .CSRF }}
+				<input type="text" id="elsysium-new-discussion-title" placeholder="Discussion Title" />
+				<textarea id="elsysium-new-discussion-description" placeholder="Discussion Text"></textarea>
+				<a class="mdl-button" onclick="newDiscussionPost();">Post</a>
+			</div>
+		</div>
+	</div>
 {{template "footer.html" .}}

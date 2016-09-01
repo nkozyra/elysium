@@ -70,6 +70,17 @@ func API_v1_TopicsHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func API_v1_TopicsHandler_POST(w http.ResponseWriter, r *http.Request) {
+	User := GetSession(r)
+
+	r.ParseForm()
+	title := r.Form.Get("title")
+	description := r.Form.Get("description")
+	t := Topic{}
+	t.create(User.ID, title, description)
+
+}
+
 func API_v1_ForumsHandler(w http.ResponseWriter, r *http.Request) {
 
 }

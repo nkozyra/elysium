@@ -24,7 +24,7 @@ func ForumHandler(w http.ResponseWriter, r *http.Request) {
 		page = 1
 	}
 	t := GetForum(v["forum"], page)
-	p := Page{User: User, Payload: t}
+	p := Page{User: User, Payload: t, CSRF: csrf.TemplateField(r)}
 	Templates.ExecuteTemplate(w, "forum.html", p)
 }
 
@@ -39,15 +39,19 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
+	User := GetSession(r)
 	d := r.URL.Query()
 	us := GetUsers(d)
-	Templates.ExecuteTemplate(w, "users.html", us)
+	Page := Page{User: User, Payload: us}
+	Templates.ExecuteTemplate(w, "users.html", Page)
 }
 
 func UserHandler(w http.ResponseWriter, r *http.Request) {
+	User := GetSession(r)
 	v := mux.Vars(r)
 	u := GetUser(v["user"])
-	Templates.ExecuteTemplate(w, "user.html", u)
+	Page := Page{User: User, Payload: u}
+	Templates.ExecuteTemplate(w, "user.html", Page)
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -111,15 +115,16 @@ func Serve() {
 	r.HandleFunc("/forum/{forum:[0-9a-z-]+}", ForumHandler)
 	r.HandleFunc("/topic/{topic:[0-9a-z-]+}", ThreadHandler)
 	r.HandleFunc("/post/{post:[0-9a-z-]+}", PostHandler)
-	r.HandleFunc("/user/{user:.+}", UserHandler)
-	r.HandleFunc("/users", UsersHandler)
+	r.HandleFunc("/member/{user:.+}", UserHandler)
+	r.HandleFunc("/members", UsersHandler)
 	// r.HandleFunc("/test", TestHandler)
 
 	// API endpoints
-	r.HandleFunc("/api/v1/members", API_v1_UsersHandler)
-	r.HandleFunc("/api/v1/member/{user:[0-9a-z-]+}", API_v1_UsersHandler)
-	r.HandleFunc("/api/v1/topics", API_v1_TopicsHandler)
+	r.HandleFunc("/api/v1/users", API_v1_UsersHandler)
+	r.HandleFunc("/api/v1/users/{user:[0-9a-z-]+}", API_v1_UsersHandler)
+	r.HandleFunc("/api/v1/topics", API_v1_TopicsHandler).Methods("GET")
 	r.HandleFunc("/api/v1/topics/{topic:[0-9a-z-]+}", API_v1_TopicsHandler)
+	r.HandleFunc("/api/v1/topics", API_v1_TopicsHandler_POST).Methods("POST")
 	r.HandleFunc("/api/v1/forums", API_v1_ForumsHandler)
 	r.HandleFunc("/api/v1/forums/{forum:[0-9a-z-]+}", API_v1_ForumsHandler)
 	r.HandleFunc("/api/v1/posts", API_v1_PostsHandler)

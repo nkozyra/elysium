@@ -35,6 +35,29 @@ function authRegistrationCheck() {
   }
 
 }
+
+
+function newDiscussionDialog() {
+
+}
+
+function newDiscussionPost() {
+  var title = $('#elsysium-new-discussion-title').val();
+  var description = $('#elsysium-new-discussion-description').val();
+  var token = $('[name="gorilla.csrf.Token"]').val();
+  $.ajax({
+    type: 'POST',
+    url: '/api/v1/topics',
+    data: { title: title, description: description, 'gorilla.csrf.Token': token },
+    success: function(d) {
+      console.log(d);
+    },
+    dataType: 'json'
+
+  })
+}
+
+
 $(document).ready(function() {
   $('#user_name, #user_email').on('keyup blur change', function() {
     authRegistrationErrors = [];

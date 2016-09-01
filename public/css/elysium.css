@@ -31,3 +31,11 @@ a {
 	font-size: 18px;
 	border-bottom: 1px solid #eee;
 }
+
+
+/*  Forums  */
+#elysium-new-discussion {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}

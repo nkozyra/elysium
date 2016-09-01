@@ -18,6 +18,37 @@ type Topic struct {
 	Posts     []Post  `json:"posts"`
 }
 
+func (t Topic) create(user_id int, title string, description string) {
+	t.Title = title
+	t.Guid = t.GenerateGUID()
+	res, err := DB.Exec("INSERT INTO topics SET user_id=?, forum_id=1, topic_title=?, topic_guid=?", user_id, title, t.Guid)
+	if err != nil {
+		log.Println(err)
+	}
+	topic_id, _ := res.LastInsertId()
+	_, err = DB.Exec("INSERT INTO posts SET user_id=?, topic_id=?, post_title=?, post_text=?", user_id, topic_id, title, description)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (t Topic) GenerateGUID() string {
+	sg := simpleGUID(t.Title)
+	rows, err := DB.Query("SELECT topic_guid FROM topics WHERE topic_guid=?", sg)
+	if err != nil {
+		// handle
+	}
+	rowCount := 0
+	for rows.Next() {
+		rowCount++
+	}
+	if rowCount > 0 {
+		return sg + RandStringBytes(6)
+	} else {
+		return sg
+	}
+}
+
 func (t Topic) GetPosts() []Post {
 
 	rows, err := DB.Query("SELECT post_id, post_text, user_id FROM posts WHERE topic_id=? ORDER BY post_create_time DESC", t.ID)

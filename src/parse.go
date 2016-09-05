@@ -1,10 +1,13 @@
 package elysium
 
 import (
-	"github.com/frustra/bbcode"
 	"log"
 	_ "regexp"
 	"strings"
+
+	"github.com/VojtechVitek/mention"
+	"github.com/frustra/bbcode"
+	"github.com/russross/blackfriday"
 )
 
 func nl2br(t string) string {
@@ -17,4 +20,17 @@ func parseText(text string) string {
 	//text = qr.ReplaceAllString(text, "<div class=\"quote\">$3</div>")
 	text = compiler.Compile(text)
 	return text
+}
+
+func mentions(text string) string {
+	tags := mention.GetTags('@', strings.NewReader(text))
+	log.Println(tags)
+
+	return ""
+	// placeholder
+}
+
+func markdown(text string) string {
+	output := blackfriday.MarkdownBasic([]byte(text))
+	return string(output)
 }

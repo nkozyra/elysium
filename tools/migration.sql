@@ -24,7 +24,7 @@ CREATE TABLE `hosts` (
 # Dump of table organzations
 # ------------------------------------------------------------
 
-CREATE TABLE `organzations` (
+CREATE TABLE `organizations` (
   `organization_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `organization_name` varchar(128) DEFAULT NULL,
   `organization_guid` varchar(128) DEFAULT NULL,
@@ -88,9 +88,11 @@ CREATE TABLE `topics` (
   `forum_id` int(10) DEFAULT NULL,
   `topic_guid` varchar(256) DEFAULT NULL,
   `topic_title` varchar(256) DEFAULT '',
+  `topic_subtitle` varchar(256) DEFAULT NULL,
   `user_id` int(12) NOT NULL,
+  `topic_last_updated` int(11) DEFAULT NULL,
   PRIMARY KEY (`topic_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
 
 

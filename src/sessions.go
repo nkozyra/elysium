@@ -32,8 +32,12 @@ func CreateSession() string {
 
 func GetSession(r *http.Request) User {
 	u := User{}
-	s, _ := r.Cookie("elysium_sid")
+	s, err := r.Cookie("elysium_sid")
+	if err != nil {
+		return u
+	}
 	if s.Value != "" {
+		fmt.Println(s.Value)
 		err := DB.QueryRow("SELECT u.user_id,  u.user_name, u.user_email FROM sessions s LEFT JOIN users u ON u.user_id=s.user_id WHERE s.session_id=?", s.Value).Scan(&u.ID, &u.Name, &u.Email)
 		if err != nil {
 			fmt.Println(err)
